@@ -26,6 +26,8 @@ public class GameView extends JFrame {
 	JLabel scoreLbl = new JLabel("점수: 1000점");
 	String[] comboCharStr = {"짱구", "도깨비", "펭귄", "옴팡이", "라이언"};
 	JComboBox<String> comboChar = new JComboBox<String>(comboCharStr);
+	String[] comboHailStr = {"폭탄", "골룸", "노랑악마", "오렌지악마"};
+	JComboBox<String> comboHail = new JComboBox<String>(comboHailStr);
 	int score = 1000;
 	
 	public GameView() {
@@ -37,8 +39,11 @@ public class GameView extends JFrame {
 		scoreLbl.setBounds(1100, 20, 100, 30);
 		comboChar.setBounds(1030, 20, 60, 30);
 		comboChar.addItemListener(comboL);
+		comboHail.setBounds(960, 20, 60, 30);
+		comboHail.addItemListener(comboL);
 		add(scoreLbl);
 		add(comboChar);
+		add(comboHail);
 		
 //		20개의 우박 객체를 생성해서 배열에 저장
 		for (int i = 0; i < hails.length; i++) {
@@ -82,6 +87,7 @@ public class GameView extends JFrame {
 		setBounds(10, 10, 1200, 600);
 		setVisible(true);
 //		setResizable(false);
+		setFocusable(true);
 		requestFocus();
 	}
 	
@@ -115,25 +121,50 @@ public class GameView extends JFrame {
 		public void itemStateChanged(ItemEvent e) {
 			ImageIcon icon = null;
 			String imgName = null;
-			switch (comboChar.getSelectedIndex()) {
-			case 0:
-				imgName = "character";
-				break;
-			case 1:
-				imgName = "goblin";
-				break;
-			case 2:
-				imgName = "penguin";
-				break;
-			case 3:
-				imgName = "ompang";
-				break;
-			case 4:
-				imgName = "lion";
-				break;
+			
+			if(e.getSource() == comboChar) {
+				switch (comboChar.getSelectedIndex()) {
+				case 0:
+					imgName = "character";
+					break;
+				case 1:
+					imgName = "goblin";
+					break;
+				case 2:
+					imgName = "penguin";
+					break;
+				case 3:
+					imgName = "ompang";
+					break;
+				case 4:
+					imgName = "lion";
+					break;
+				}
+				icon = new ImageIcon("images/" + imgName + ".gif");
+				charLbl.setIcon(icon);
+			}else if(e.getSource() == comboHail) {
+				switch (comboHail.getSelectedIndex()) {
+				case 0:
+					imgName = "hail.gif";
+					break;
+				case 1:
+					imgName = "gollum.png";
+					break;
+				case 2:
+					imgName = "devil1.png";
+					break;
+				case 3:
+					imgName = "devil2.png";
+					break;
+				}
+				icon = new ImageIcon("images/" + imgName);
+				for (int j = 0; j < lblHails.length; j++) {
+					lblHails[j].setIcon(icon);
+				}
+				
 			}
-			icon = new ImageIcon("images/" + imgName + ".gif");
-			charLbl.setIcon(icon);
+			GameView.this.setFocusable(true);
+			GameView.this.requestFocus();
 		}
 	};
 	
