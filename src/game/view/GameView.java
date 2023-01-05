@@ -2,11 +2,14 @@ package game.view;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.Random;
 
 import javax.swing.ImageIcon;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
@@ -21,6 +24,8 @@ public class GameView extends JFrame {
 	JLabel[] lblDiamonds = new JLabel[diamonds.length];
 	JLabel charLbl = new JLabel(new ImageIcon("images/character.gif"));
 	JLabel scoreLbl = new JLabel("점수: 1000점");
+	String[] comboCharStr = {"짱구", "도깨비", "펭귄", "옴팡이", "라이언"};
+	JComboBox<String> comboChar = new JComboBox<String>(comboCharStr);
 	int score = 1000;
 	
 	public GameView() {
@@ -30,8 +35,10 @@ public class GameView extends JFrame {
 		HailThread hThread = null;
 		DiamondThread dThread = null;
 		scoreLbl.setBounds(1100, 20, 100, 30);
-//		scoreLbl.setFont(new Font("중고딕", Font.BOLD, 15));
+		comboChar.setBounds(1030, 20, 60, 30);
+		comboChar.addItemListener(comboL);
 		add(scoreLbl);
+		add(comboChar);
 		
 //		20개의 우박 객체를 생성해서 배열에 저장
 		for (int i = 0; i < hails.length; i++) {
@@ -101,6 +108,34 @@ public class GameView extends JFrame {
 			}
 		}
 	}
+	
+	ItemListener comboL = new ItemListener() {
+		
+		@Override
+		public void itemStateChanged(ItemEvent e) {
+			ImageIcon icon = null;
+			String imgName = null;
+			switch (comboChar.getSelectedIndex()) {
+			case 0:
+				imgName = "character";
+				break;
+			case 1:
+				imgName = "goblin";
+				break;
+			case 2:
+				imgName = "penguin";
+				break;
+			case 3:
+				imgName = "ompang";
+				break;
+			case 4:
+				imgName = "lion";
+				break;
+			}
+			icon = new ImageIcon("images/" + imgName + ".gif");
+			charLbl.setIcon(icon);
+		}
+	};
 	
 	KeyAdapter keyL = new KeyAdapter() {
 		
