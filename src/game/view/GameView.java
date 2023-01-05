@@ -1,6 +1,8 @@
 package game.view;
 
 import java.awt.Color;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.Random;
 
 import javax.swing.ImageIcon;
@@ -12,10 +14,11 @@ import game.vo.Hail;
 
 public class GameView extends JFrame {
 //	20개의 우박 객체 참조값이 저장되는 배열
-	Hail[] hails = new Hail[20]; 
+	Hail[] hails = new Hail[16]; 
 	JLabel[] lblHails = new JLabel[hails.length];
 	Diamond[] diamonds = new Diamond[hails.length / 2];
 	JLabel[] lblDiamonds = new JLabel[diamonds.length];
+	JLabel charLbl = new JLabel(new ImageIcon("images/character.gif"));
 	
 	public GameView() {
 		setLayout(null);
@@ -57,12 +60,37 @@ public class GameView extends JFrame {
 			dThread.start();
 		}
 		
+		charLbl.setBounds(470, 500, 40, 50);
+		add(charLbl);
+		addKeyListener(keyL);
+		
 		setTitle("우박을 피해봐");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setBounds(10, 10, 1000, 600);
 		setVisible(true);
 //		setResizable(false);
+		requestFocus();
 	}
+	
+	
+	KeyAdapter keyL = new KeyAdapter() {
+		public void keyPressed(KeyEvent e) {
+			switch (e.getKeyCode()) {
+			case KeyEvent.VK_UP: 
+				charLbl.setLocation(charLbl.getX(), charLbl.getY()-10);
+				break;
+			case KeyEvent.VK_DOWN: 
+				charLbl.setLocation(charLbl.getX(), charLbl.getY()+10);
+				break;
+			case KeyEvent.VK_LEFT: 
+				charLbl.setLocation(charLbl.getX()-10, charLbl.getY());
+				break;
+			case KeyEvent.VK_RIGHT: 
+				charLbl.setLocation(charLbl.getX()+10, charLbl.getY());
+				break;
+			}			
+		}
+	};
 	
 	public class HailThread extends Thread{
 		JLabel hailLbl;
@@ -83,8 +111,6 @@ public class GameView extends JFrame {
 				else {
 					hailLbl.setLocation(hailLbl.getX(), random.nextInt(70));
 				}
-					
-				
 				try {
 					sleep(20 * random.nextInt(50));
 				} catch (InterruptedException e) {
