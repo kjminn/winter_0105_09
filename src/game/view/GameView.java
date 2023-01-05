@@ -1,6 +1,7 @@
 package game.view;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.Random;
@@ -19,6 +20,8 @@ public class GameView extends JFrame {
 	Diamond[] diamonds = new Diamond[hails.length / 2];
 	JLabel[] lblDiamonds = new JLabel[diamonds.length];
 	JLabel charLbl = new JLabel(new ImageIcon("images/character.gif"));
+	JLabel scoreLbl = new JLabel("점수: 1000점");
+	int score = 1000;
 	
 	public GameView() {
 		setLayout(null);
@@ -26,18 +29,21 @@ public class GameView extends JFrame {
 		Random random = new Random();
 		HailThread hThread = null;
 		DiamondThread dThread = null;
+		scoreLbl.setBounds(1100, 20, 100, 30);
+//		scoreLbl.setFont(new Font("중고딕", Font.BOLD, 15));
+		add(scoreLbl);
 		
 //		20개의 우박 객체를 생성해서 배열에 저장
 		for (int i = 0; i < hails.length; i++) {
 			hails[i] = new Hail();
-			hails[i].setX(i * 50);
-			hails[i].setY(i * random.nextInt(50));
-			hails[i].setW(40);
-			hails[i].setH(40);
+			hails[i].setX(i * 70);
+			hails[i].setY(i * random.nextInt(70));
+			hails[i].setW(60);
+			hails[i].setH(60);
 			hails[i].setImgName("images/hail.gif");
 			hails[i].setPoint(10);
 			lblHails[i] = new JLabel(new ImageIcon(hails[i].getImgName()));
-			lblHails[i].setBounds(hails[i].getX(), hails[i].getY(), hails[i].getW(), hails[i].getY());
+			lblHails[i].setBounds(hails[i].getX(), hails[i].getY(), hails[i].getW(), hails[i].getH());
 			add(lblHails[i]);
 			hThread = new HailThread(lblHails[i], hails[i]);
 			hThread.start();
@@ -47,33 +53,57 @@ public class GameView extends JFrame {
 		
 		for (int i = 0; i < diamonds.length; i++) {
 			diamonds[i] = new Diamond();
-			diamonds[i].setX(i * 50 + random.nextInt(500));
+			diamonds[i].setX(i * 140 + random.nextInt(70));
 			diamonds[i].setY(i * random.nextInt(30));
-			diamonds[i].setW(40);
-			diamonds[i].setH(30);
+			diamonds[i].setW(70);
+			diamonds[i].setH(50);
 			diamonds[i].setImgName("images/diamond.gif");
 			diamonds[i].setPoint(20);
 			lblDiamonds[i] = new JLabel(new ImageIcon(diamonds[i].getImgName()));
-			lblDiamonds[i].setBounds(diamonds[i].getX(), diamonds[i].getY(), diamonds[i].getW(), diamonds[i].getY());
+			lblDiamonds[i].setBounds(diamonds[i].getX(), diamonds[i].getY(), diamonds[i].getW(), diamonds[i].getH());
 			add(lblDiamonds[i]);
 			dThread = new DiamondThread(lblDiamonds[i], diamonds[i]);
 			dThread.start();
 		}
 		
-		charLbl.setBounds(470, 500, 40, 50);
+		charLbl.setBounds(550, 450, 60, 70);
 		add(charLbl);
 		addKeyListener(keyL);
 		
 		setTitle("우박을 피해봐");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		setBounds(10, 10, 1000, 600);
+		setBounds(10, 10, 1200, 600);
 		setVisible(true);
 //		setResizable(false);
 		requestFocus();
 	}
 	
+	public void changeScore() {
+		for (int i = 0; i < lblHails.length; i++) {				
+			if(charLbl.getX() >= lblHails[i].getX() && charLbl.getX() <= lblHails[i].getX()+lblHails[i].getWidth()) {
+				if(charLbl.getY() >= lblHails[i].getY() && charLbl.getY() <= lblHails[i].getY()+lblHails[i].getHeight()) {
+					if(score > hails[i].getPoint()) {
+						score -= hails[i].getPoint();
+						scoreLbl.setText("점수: "+score+"점");
+					}
+				}
+			}
+		}
+		
+		for (int i = 0; i < lblDiamonds.length; i++) {				
+			if(charLbl.getX() >= lblDiamonds[i].getX() && charLbl.getX() <= lblDiamonds[i].getX()+lblDiamonds[i].getWidth()) {
+				if(charLbl.getY() >= lblDiamonds[i].getY() && charLbl.getY() <= lblDiamonds[i].getY()+lblDiamonds[i].getHeight()) {
+					if(score <= 980) {
+						score += diamonds[i].getPoint();
+						scoreLbl.setText("점수: "+score+"점");
+					}
+				}
+			}
+		}
+	}
 	
 	KeyAdapter keyL = new KeyAdapter() {
+		
 		public void keyPressed(KeyEvent e) {
 			switch (e.getKeyCode()) {
 			case KeyEvent.VK_UP: 
@@ -88,7 +118,8 @@ public class GameView extends JFrame {
 			case KeyEvent.VK_RIGHT: 
 				charLbl.setLocation(charLbl.getX()+10, charLbl.getY());
 				break;
-			}			
+			}
+			changeScore();
 		}
 	};
 	
@@ -111,8 +142,9 @@ public class GameView extends JFrame {
 				else {
 					hailLbl.setLocation(hailLbl.getX(), random.nextInt(70));
 				}
+				//changeScore();
 				try {
-					sleep(20 * random.nextInt(50));
+					sleep(20 * random.nextInt(100));
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
@@ -137,14 +169,14 @@ public class GameView extends JFrame {
 			while (true) {
 				Random random = new Random();
 				if( diamondLbl.getY() <= 600)
-					diamondLbl.setLocation(diamondLbl.getX(), diamondLbl.getY() + 15);
+					diamondLbl.setLocation(diamondLbl.getX(), diamondLbl.getY() + 10);
 				else {
-					diamondLbl.setLocation(diamondLbl.getX(), random.nextInt(30));
+					diamondLbl.setLocation(diamondLbl.getX(), random.nextInt(70));
 				}
 					
 				
 				try {
-					sleep(10 * random.nextInt(40));
+					sleep(30 * random.nextInt(50));
 				} catch (InterruptedException e) {
 	
 				}
