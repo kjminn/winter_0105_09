@@ -124,7 +124,7 @@ public class GameView extends JFrame {
 			}
 		}
 		
-		if(score == 1200) {
+		if(score >= 1200 && score < 1300) {
 			if(level != 2) {
 				hailCount = 20;
 				hailX = 60;
@@ -134,8 +134,7 @@ public class GameView extends JFrame {
 				scoreLbl.setText("점수: "+score+"점");
 				changeHailCount();
 			}	
-		}
-		if(score >= 1300) {
+		}else if(score >= 1300) {
 			JOptionPane.showMessageDialog(this, "~~ You Win ~~");
 			dispose();
 		}
