@@ -24,7 +24,7 @@ public class GameStart extends JFrame {
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			new GameView();			
+			new GameView(GameStart.this);
 		}
 	};
 }
