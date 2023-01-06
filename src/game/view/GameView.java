@@ -13,10 +13,14 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
+import game.controller.DiamondThread;
+import game.controller.HailThread;
 import game.vo.Diamond;
 import game.vo.Hail;
 
 public class GameView extends JFrame {
+	public static final int FRAME_WIDTH = 1200;
+	public static final int FRAME_HEIGHT = 600;
 //	20개의 우박 객체 참조값이 저장되는 배열
 	Hail[] hails = new Hail[16]; 
 	JLabel[] lblHails = new JLabel[hails.length];
@@ -50,10 +54,6 @@ public class GameView extends JFrame {
 			hails[i] = new Hail();
 			hails[i].setX(i * 70);
 			hails[i].setY(i * random.nextInt(70));
-			hails[i].setW(60);
-			hails[i].setH(60);
-			hails[i].setImgName("images/hail.gif");
-			hails[i].setPoint(10);
 			lblHails[i] = new JLabel(new ImageIcon(hails[i].getImgName()));
 			lblHails[i].setBounds(hails[i].getX(), hails[i].getY(), hails[i].getW(), hails[i].getH());
 			add(lblHails[i]);
@@ -67,10 +67,6 @@ public class GameView extends JFrame {
 			diamonds[i] = new Diamond();
 			diamonds[i].setX(i * 140 + random.nextInt(70));
 			diamonds[i].setY(i * random.nextInt(30));
-			diamonds[i].setW(70);
-			diamonds[i].setH(50);
-			diamonds[i].setImgName("images/diamond.gif");
-			diamonds[i].setPoint(20);
 			lblDiamonds[i] = new JLabel(new ImageIcon(diamonds[i].getImgName()));
 			lblDiamonds[i].setBounds(diamonds[i].getX(), diamonds[i].getY(), diamonds[i].getW(), diamonds[i].getH());
 			add(lblDiamonds[i]);
@@ -84,7 +80,7 @@ public class GameView extends JFrame {
 		
 		setTitle("우박을 피해봐");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		setBounds(10, 10, 1200, 600);
+		setBounds(10, 10, FRAME_WIDTH, FRAME_HEIGHT);
 		setVisible(true);
 //		setResizable(false);
 		setFocusable(true);
@@ -173,82 +169,24 @@ public class GameView extends JFrame {
 		public void keyPressed(KeyEvent e) {
 			switch (e.getKeyCode()) {
 			case KeyEvent.VK_UP: 
-				charLbl.setLocation(charLbl.getX(), charLbl.getY()-10);
+				if(charLbl.getY() > 0)
+					charLbl.setLocation(charLbl.getX(), charLbl.getY()-10);
 				break;
 			case KeyEvent.VK_DOWN: 
-				charLbl.setLocation(charLbl.getX(), charLbl.getY()+10);
+				if(charLbl.getY() < FRAME_HEIGHT-charLbl.getHeight()*2)
+					charLbl.setLocation(charLbl.getX(), charLbl.getY()+10);
 				break;
 			case KeyEvent.VK_LEFT: 
-				charLbl.setLocation(charLbl.getX()-10, charLbl.getY());
+				if(charLbl.getX() > 0)
+					charLbl.setLocation(charLbl.getX()-10, charLbl.getY());
 				break;
 			case KeyEvent.VK_RIGHT: 
-				charLbl.setLocation(charLbl.getX()+10, charLbl.getY());
+				if(charLbl.getX() < FRAME_WIDTH-charLbl.getWidth())
+					charLbl.setLocation(charLbl.getX()+10, charLbl.getY());
 				break;
 			}
 			changeScore();
 		}
 	};
-	
-	public class HailThread extends Thread{
-		JLabel hailLbl;
-		Hail hail;
-		
-		public HailThread(JLabel hailLbl, Hail hail) {
-			this.hailLbl = hailLbl;
-			this.hail = hail;
-		}
-		
-		
-		@Override
-		public void run() {
-			while (true) {
-				Random random = new Random();
-				if( hailLbl.getY() <= 600)
-					hailLbl.setLocation(hailLbl.getX(), hailLbl.getY() + 10);
-				else {
-					hailLbl.setLocation(hailLbl.getX(), random.nextInt(70));
-				}
-				//changeScore();
-				try {
-					sleep(20 * random.nextInt(100));
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-
-		}
-	}
-	
-	
-	public class DiamondThread extends Thread{
-		JLabel diamondLbl;
-		Diamond diamond;
-		
-		public DiamondThread(JLabel diamondLbl, Diamond diamond) {
-			this.diamondLbl = diamondLbl;
-			this.diamond = diamond;
-		}
-		
-		
-		@Override
-		public void run() {
-			while (true) {
-				Random random = new Random();
-				if( diamondLbl.getY() <= 600)
-					diamondLbl.setLocation(diamondLbl.getX(), diamondLbl.getY() + 10);
-				else {
-					diamondLbl.setLocation(diamondLbl.getX(), random.nextInt(70));
-				}
-					
-				
-				try {
-					sleep(30 * random.nextInt(50));
-				} catch (InterruptedException e) {
-	
-				}
-			}
-
-		}
-	}
 	
 }

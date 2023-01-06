@@ -2,9 +2,9 @@ package game.vo;
 
 public class Diamond {
 	private int x, y;
-	private int w, h;
-	private String imgName;
-	private int point;
+	private int w=70, h=50;
+	private String imgName="images/diamond.gif";
+	private int point=20;
 	
 	public int getX() {
 		return x;

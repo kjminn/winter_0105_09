@@ -2,9 +2,9 @@ package game.vo;
 
 public class Hail {
 	private int x, y;
-	private int w, h;
-	private String imgName;
-	private int point;
+	private int w=60, h=60;
+	private String imgName="images/hail.gif";
+	private int point=10;
 	
 	public int getX() {
 		return x;
